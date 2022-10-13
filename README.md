@@ -17,7 +17,7 @@ In addition to the Fitbit data, I am planning to collect some other data such as
 
 Withe these data, I'll build a data pipeline and data warehouse and create some visualizations to understand what is causing a "Happy Morning" and what is causing a "Sad Morning".
 
-As I'm still in the learning phrase and aspiring to be a data engineer, even if it's unnecesary, I will try to explore and use as many tools as I can afford. I will also keep track of my progress and test codes that I use during the development and take notes on the difficulties I face along the way.
+As I'm still in the learning phase and aspiring to be a data engineer, even if it's unnecesary, I will try to explore and use as many tools as I can afford. I will also keep track of my progress and test codes that I use during the development and take notes on the difficulties I face along the way.
 
 
 ## Design Overview
