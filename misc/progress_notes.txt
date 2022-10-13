@@ -1,0 +1,5 @@
+10-12-2022
+- For Fitbit API, although there are some existing OAuth 2.0 Library for Python, I decided not to use it and create my own Fitbit class instead for my learning purpose.
+    - Because of that, it took me a long time to figure out how to authorize and fetch some data via Fitbit API, especially to realize that the parameters such as client_id or authorization_token need to be passed to requests.post() function via the 'data' parameter and not the 'params'.
+- There is a feature called Fitbit Subscribe to get notifed when the Fitbit data is updated by the user, but I chose to use a scheduling tool like Airflow for my learning purpose.
+- Was able to authorize, get access token, and fetch Fitbit data regarding my sleep via Fitbit API.
