@@ -22,4 +22,23 @@ As I'm still in the learning phase and aspiring to be a data engineer, even if i
 
 ## Design Overview
 
-TBD
+I will build an ELT pipeline and visualizations using the following tools:
+
+Extract:
+- Python 3.10.6
+- Some questionnaire and its API (TBD)
+- etc..
+
+Load:
+- Python 3.10.6
+- Data Warehouse (TBD)
+
+Transform:
+- dbt
+
+Visualization:
+- Tableau/Quicksight
+
+Scheduling:
+- Airflow
+
