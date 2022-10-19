@@ -2,4 +2,24 @@
 - For Fitbit API, although there are some existing OAuth 2.0 Library for Python, I decided not to use it and create my own Fitbit class instead for my learning purpose.
     - Because of that, it took me a long time to figure out how to authorize and fetch some data via Fitbit API, especially to realize that the parameters such as client_id or authorization_token need to be passed to requests.post() function via the 'data' parameter and not the 'params'.
 - There is a feature called Fitbit Subscribe to get notifed when the Fitbit data is updated by the user, but I chose to use a scheduling tool like Airflow for my learning purpose.
-- Was able to authorize, get access token, and fetch Fitbit data regarding my sleep via Fitbit API.
+- I was able to authorize, get access token, and fetch Fitbit data regarding my sleep via Fitbit API.
+
+~10-18-2022
+- Started encapsulating the Fitbit API related functions to a Fitbit class.
+- With the recommended "Authorization Code Grant Flow with PKCE", the authorization process needs to be done using a web browser. And the provided authorization code expires in 10min.
+    - So I cannot just run a Python program every day with some scheduling tool to fethch my Fitbit data becasue I, as a Fitbit user, need to approve the access to my data on some web browser first.
+    - To overcome this, in my questionnaire that I'll answer every day, include the URL for the authorization and provide the given authorization code through the questionnaire answer?
+    - But with this approach, the Python program to extract the Fitbit data needs to wait for me to complete the questionnaire
+- With the "Implicit Grant Flow", I can choose the expiration period of the access token, so once I allowed Fitbit to grant acceess, I can access the Fitbit data using the same access token for the specified period of time.
+    - But to allow the access to my Fitbit data and provide the access code at first, I still need to use a web browser.
+- For the purpose of this project, I want to make it fully automated, so I will try the "Implicit Grant Flow".
+
+10-19-2022
+- Tried different Fitbit APIs
+- Decided to use RDS instead of Redshift because Redshift is so expensive, RDS offers free tier for a longer period of time (12 months vs 2 months), and there shouldn't be so much data that it requires an actual data warehouse solution like Redshift.
+    - Redshift is based on PostgreSQL, so I will use RDS PostgreSQL.
+- Tested loading the extracted Fitbit data in json format into an RDS PostgreSQL instance using psycopg2
+    - Those data in json format will be parsed and transformed later using dbt
+    - These json data will land in LANDING, be parsed in STAGING, and be transformed and stored in PROD databases
+- Testing json data parse
+
