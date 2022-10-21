@@ -23,3 +23,17 @@
     - These json data will land in LANDING, be parsed in STAGING, and be transformed and stored in PROD databases
 - Testing json data parse
 
+
+10-20-2022
+- For the sleep level data (light, rem, etc..), although I aggregated the "sleep : levels : data" and "sleep : levels : shortData", I wasn't able to get the same values as the "sleep : levels : summary".
+    - It was because of this: https://www.fitabase.com/resources/knowledge-base/learn-about-fitbit-data/sleep-stage-data/
+    - During one single light sleep (59min), there were 4 wakes like below, and that's why this light sleep was actually counted 4 times:
+
+    "2022-10-11T03:48:30.000"	"light"	59
+    "2022-10-11T03:52:30.000"	"wake"	1
+    "2022-10-11T03:57:30.000"	"wake"	0
+    "2022-10-11T04:03:00.000"	"wake"	1
+    "2022-10-11T04:43:30.000"	"wake"	0
+
+    - So simple aggregation cannot get the same results as the summary.
+- Parsed and aggregated the sleep level data so that the aggregated results match the "sleep : levels : summary" (= solved the issue above).
