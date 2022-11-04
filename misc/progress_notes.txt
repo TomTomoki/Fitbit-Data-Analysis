@@ -37,3 +37,9 @@
 
     - So simple aggregation cannot get the same results as the summary.
 - Parsed and aggregated the sleep level data so that the aggregated results match the "sleep : levels : summary" (= solved the issue above).
+
+
+11-03-2022
+- Changed the schema design. Now, there is only one database 'Fitbit_Analysis' with 3 schemas (LANDING, STAGING, PROD) in it.
+- Wrote the sql to parse Fitbit steps data
+- Started setting up dbt and airflow on EC2 instance

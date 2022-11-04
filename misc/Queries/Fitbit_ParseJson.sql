@@ -1,4 +1,4 @@
--- Fitbit sleep
+-- Sleep
 with cte_sleep_overview as (
 	select
 		load_json #> '{sleep,0}' ->> 'dateOfSleep' as dateOfSleep
@@ -16,7 +16,7 @@ with cte_sleep_overview as (
 		, load_json -> 'summary' -> 'totalMinutesAsleep' as totalMinutesAsleep
 		, load_json -> 'summary' -> 'totalSleepRecords' as totalSleepRecords
 		, load_json -> 'summary' -> 'totalTimeInBed' as totalTimeInBed
-	from Fitbit.sleep
+	from landing.sleep
 ),
 cte_union_shortData_data as (
 	select
@@ -24,20 +24,20 @@ cte_union_shortData_data as (
 		, json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{shortData}') ->> 'dateTime' as dateTime
 		, json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{shortData}') ->> 'level' as level
 		, cast(json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{shortData}') ->> 'seconds' as integer) as seconds
-	from Fitbit.sleep
+	from landing.sleep
 	union
 	select
 		load_json #> '{sleep,0}' ->> 'logId' as logId
 		, json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{data}') ->> 'dateTime' as dateTime
 		, json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{data}') ->> 'level' as level
 		, cast(json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{data}') ->> 'seconds' as integer) as seconds
-	from Fitbit.sleep
+	from landing.sleep
 ),
 cte_add_endTime as(
 	select
 		logId
 		, level
-		,cast(datetime as timestamp) as level_start
+		, cast(datetime as timestamp) as level_start
 		, cast(datetime as timestamp) + interval '1 second' * seconds as level_end
 		, seconds
 	from cte_union_shortData_data
@@ -84,3 +84,42 @@ select
 	*
 from cte_sleep_overview
 join cte_aggregated_at_sleep_level using(logId);
+
+
+-- Steps
+with expanded as (
+	select
+		load_json -> 'activities-steps' -> 0 ->> 'dateTime' as recorded_date
+		, load_json -> 'activities-steps' -> 0 ->> 'value' as total_steps
+		, json_array_elements(load_json -> 'activities-steps-intraday' -> 'dataset') as steps_detail
+	from landing.steps
+)
+, json_parsed as (
+	select
+		recorded_date
+		, total_steps
+		, cast(steps_detail ->> 'time' as time) as recorded_time
+		, cast(steps_detail ->> 'value' as integer) as steps
+	from expanded
+)
+, min30_interval_converted as (
+	select
+		recorded_date::date + recorded_time as original_datetime
+		, to_timestamp(floor((extract(epoch from (recorded_date::date + recorded_time)) + 1800) / 1800) * 1800) as min30_interval
+		, steps
+	from json_parsed
+)
+select
+min30_interval as recorded_time
+, sum(steps)
+from min30_interval_converted
+group by min30_interval
+order by min30_interval;
+-- ### For houly aggregation
+-- select
+-- 	recorded_date::date + date_trunc('hour', recorded_time) as recorded_time
+-- 	, sum(steps) as steps
+-- from json_parsed
+-- group by recorded_date::date + date_trunc('hour', recorded_time)
+-- order by recorded_time;
+
