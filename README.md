@@ -24,21 +24,10 @@ As I'm still in the learning phase and aspiring to be a data engineer, even if i
 
 I will build an ELT pipeline and visualizations using the following tools:
 
-Extract:
-- Python 3.10.6
+- EC2 Instance - Ubuntu Server 22.04
+- Python 3.10
+- Airflow 2.4.2
+- RDS PostgreSQL 13.7\
 - Some questionnaire and its API (TBD)
-- etc..
-
-Load:
-- Python 3.10.6
-- Data Warehouse (TBD)
-
-Transform:
 - dbt
-
-Visualization:
-- Tableau/Quicksight
-
-Scheduling:
-- Airflow
-
+- Tableau
