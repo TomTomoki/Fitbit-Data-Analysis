@@ -42,4 +42,12 @@
 11-03-2022
 - Changed the schema design. Now, there is only one database 'Fitbit_Analysis' with 3 schemas (LANDING, STAGING, PROD) in it.
 - Wrote the sql to parse Fitbit steps data
-- Started setting up dbt and airflow on EC2 instance
+
+11-07-2022
+- Started setting up airflow on EC2 instance
+
+12-19-2022
+- Continue working on airflow set-up
+- Set up a RDS PostgreSQL as an Airflow metadata database
+- Start wrting dags
+
