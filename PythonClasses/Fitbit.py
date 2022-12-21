@@ -23,10 +23,10 @@ class Fitbit:
         return requests.get('https://api.fitbit.com/1.2/user/-/sleep/date/' + date + '.json', headers=self.headers)
 
     def get_steps(self, date):
-        return requests.get('https://api.fitbit.com/1/user/-/activities/steps/date/2022-10-11/1d.json', headers=self.headers)
+        return requests.get('https://api.fitbit.com/1/user/-/activities/steps/date/' + date + '/1d.json', headers=self.headers)
 
     def get_calories(self, date):
-        return requests.get('https://api.fitbit.com/1/user/-/activities/calories/date/2022-10-11/1d.json', headers=self.headers)
+        return requests.get('https://api.fitbit.com/1/user/-/activities/calories/date/' + date + '/1d.json', headers=self.headers)
 
     def access_token_expired(self):
         """_summary_
