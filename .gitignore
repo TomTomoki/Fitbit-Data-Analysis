@@ -1,0 +1,5 @@
+private_nonShared/
+config.py
+airflow/*
+!airflow/dags/
+env/
