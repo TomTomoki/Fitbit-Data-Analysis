@@ -26,7 +26,7 @@ def fitbit_taskflow():
 
         for type in types:
             res = fb.get_records(type, record_date)
-            db_conn.execute_query("INSERT INTO LANDING.{} (load_date, load_json) VALUES ('{}', '{}')".format(type, pdl.today(), res.text))
+            db_conn.execute_query("INSERT INTO LANDING.{} (load_timestamp, load_json) VALUES ('{}', '{}')".format(type, pdl.now('America/Los_Angeles'), res.text))
 
         db_conn.close_connection()
     
