@@ -1,5 +1,5 @@
 private_nonShared/
-config.py
 airflow/*
 !airflow/dags/
+airflow/dags/helper_modules/env_config.py
 env/
