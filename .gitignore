@@ -4,3 +4,5 @@ airflow/*
 airflow/dags/helper_modules/env_config.py
 env/
 *__pycache__*
+demo/
+dbt/logs/

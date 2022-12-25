@@ -1,18 +1,19 @@
 import helper_modules.env_config as env_config
 from helper_modules.Fitbit import Fitbit
 from helper_modules.DBConnector import DBConnector
-
 from airflow.decorators import dag, task
+from airflow.operators.bash import BashOperator
 import pendulum as pdl
+import os
 
 @dag(
     dag_id='Fitbit',
     schedule=None,
     start_date=pdl.datetime(2022, 12, 1, tz="America/Los_Angeles"),
-    default_args={"retries": 2}
+    #default_args={"retries": 2}
 )
 def fitbit_taskflow():
-    @task()
+    @task
     def extract_load():
         fb = Fitbit(env_config.fitbit_client_id, 
                     env_config.fitbit_access_token,
@@ -22,7 +23,8 @@ def fitbit_taskflow():
         db_conn.connect()
 
         types = ['sleep', 'steps', 'calories']
-        record_date = pdl.now('America/Los_Angeles').to_date_string()
+        #record_date = pdl.now('America/Los_Angeles').to_date_string()
+        record_date = pdl.from_format('2022-10-12', 'YYYY-MM-DD').to_date_string()
 
         for type in types:
             res = fb.get_records(type, record_date)
@@ -30,10 +32,23 @@ def fitbit_taskflow():
 
         db_conn.close_connection()
     
-    @task()
-    def transform():
-        pass
+    ### Transform task
+    HOME = os.environ["HOME"]
+    dbt_path = os.path.join(HOME, "Fitbit-Data-Analysis/dbt/fitbit_dbt")
 
-    extract_load() >> transform()
+    transform_1 = BashOperator(
+        task_id = 'transform_1',
+        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run"
+        #bash_command=f"cd {dbt_path}"
+        #bash_command=f"cd {dbt_path}" + " && dbt run --models my_first_dbt_model"
+    )
+
+    transform_2 = BashOperator(
+        task_id = 'transform_2',
+        bash_command=f"cd {dbt_path}"
+    )
+
+    extract_load() >> transform_1 >> transform_2
+
 
 fitbit_taskflow()

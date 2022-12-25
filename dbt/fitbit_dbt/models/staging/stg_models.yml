@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_sleep
+    description: "Staging model for Fitbit Sleep data"
+    config:
+      materialized: "incremental"
+  - name: stg_steps
+    description: "Staging model for Fitbit Steps data"
+    config:
+      materialized: "incremental"
+  - name: stg_calories
+    description: "Staging model for Fitbit Calories data"
+    config:
+      materialized: "incremental"

@@ -51,3 +51,10 @@
 - Set up a RDS PostgreSQL as an Airflow metadata database
 - Start wrting dags
 
+~ 12-22-2022
+- Done Fitbit extract & load using Airflow
+- Start setting up dbt with Airflow
+
+12-25-2022
+- Done dbt setup
+- Tested simple Fitbit data ELT on Airflow
