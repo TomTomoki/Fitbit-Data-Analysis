@@ -36,19 +36,17 @@ def fitbit_taskflow():
     HOME = os.environ["HOME"]
     dbt_path = os.path.join(HOME, "Fitbit-Data-Analysis/dbt/fitbit_dbt")
 
-    transform_1 = BashOperator(
-        task_id = 'transform_1',
-        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run"
-        #bash_command=f"cd {dbt_path}"
-        #bash_command=f"cd {dbt_path}" + " && dbt run --models my_first_dbt_model"
+    transform_stg = BashOperator(
+        task_id = 'transform_stg',
+        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run --select staging.stg_sleep staging.stg_steps staging.stg_calories"
     )
 
-    transform_2 = BashOperator(
-        task_id = 'transform_2',
+    transform_prod = BashOperator(
+        task_id = 'transform_prod',
         bash_command=f"cd {dbt_path}"
     )
 
-    extract_load() >> transform_1 >> transform_2
+    extract_load() >> transform_stg >> transform_prod
 
 
 fitbit_taskflow()
