@@ -3,6 +3,7 @@ from helper_modules.Fitbit import Fitbit
 from helper_modules.DBConnector import DBConnector
 from airflow.decorators import dag, task
 from airflow.operators.bash import BashOperator
+from  airflow.exceptions import AirflowFailException
 import pendulum as pdl
 import os
 
@@ -22,13 +23,21 @@ def fitbit_taskflow():
         db_conn = DBConnector(env_config.db_user, env_config.db_password, env_config.db_name, env_config.db_host)
         db_conn.connect()
 
-        types = ['sleep', 'steps', 'calories']
+        types = ['sleep', 'steps', 'calories', 'distance', 'minutesSedentary', 'heartrate']
         #record_date = pdl.now('America/Los_Angeles').to_date_string()
         record_date = pdl.from_format('2022-10-12', 'YYYY-MM-DD').to_date_string()
 
         for type in types:
             res = fb.get_records(type, record_date)
-            db_conn.execute_query("INSERT INTO LANDING.{} (load_timestamp, load_json) VALUES ('{}', '{}')".format(type, pdl.now('America/Los_Angeles'), res.text))
+
+            if res == "access_token_expired":
+                db_conn.close_connection()
+                raise AirflowFailException("ERROR: Access token expired!")
+            elif res == "invalid_record_type"
+                db_conn.close_connection()
+                raise AirflowFailException("ERROR: Invalid record type!")
+            else:
+                db_conn.execute_query("INSERT INTO LANDING.{} (load_timestamp, load_json) VALUES ('{}', '{}')".format(type, pdl.now('America/Los_Angeles'), res.text))
 
         db_conn.close_connection()
     

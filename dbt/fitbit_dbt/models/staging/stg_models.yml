@@ -13,3 +13,15 @@ models:
     description: "Staging model for Fitbit Calories data"
     config:
       materialized: "incremental"
+  - name: stg_distance
+    description: "Staging model for Fitbit Distance data"
+    config:
+      materialized: "incremental"
+  - name: stg_sedentary
+    description: "Staging model for Fitbit Sedentary data"
+    config:
+      materialized: "incremental"
+  - name: stg_heartrate
+    description: "Staging model for Fitbit Heartrate data"
+    config:
+      materialized: "incremental"

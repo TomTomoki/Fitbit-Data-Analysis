@@ -58,3 +58,10 @@
 12-25-2022
 - Done dbt setup
 - Tested simple Fitbit data ELT on Airflow
+
+12-26-2022
+- Started exploring Google Forms for my questionaaire
+- Finalizing the data model in my data warehouse
+
+~12-30-2022
+- Add more fitbit data... distance, sedentary, and heartrate
