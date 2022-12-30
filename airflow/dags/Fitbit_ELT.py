@@ -10,8 +10,7 @@ import os
 @dag(
     dag_id='Fitbit',
     schedule=None,
-    start_date=pdl.datetime(2022, 12, 1, tz="America/Los_Angeles"),
-    #default_args={"retries": 2}
+    start_date=pdl.datetime(2022, 12, 1, tz="America/Los_Angeles")
 )
 def fitbit_taskflow():
     @task
@@ -47,7 +46,7 @@ def fitbit_taskflow():
 
     transform_stg = BashOperator(
         task_id = 'transform_stg',
-        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run --select staging.stg_sleep staging.stg_steps staging.stg_calories"
+        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run --select staging"
     )
 
     transform_prod = BashOperator(
