@@ -4,7 +4,12 @@ with expanded as (
 		, load_json -> 'activities-minutesSedentary' -> 0 #>> '{value}' as daily_sedentary
 		, json_array_elements(load_json -> 'activities-minutesSedentary-intraday' #> '{dataset}') as sedentary_detail
 		, load_timestamp
-	from LANDING.sedentary
+	from landing.sedentary
+	{% if is_incremental() %}
+
+		where load_json -> 'activities-minutesSedentary' -> 0 ->> 'dateTime' > (select COALESCE(max(recorded_date), '2022-09-30') from {{ this }})
+
+	{% endif %}
 )
 , json_parsed as (
 	select
@@ -15,20 +20,20 @@ with expanded as (
 		, load_timestamp
 	from expanded
 )
-, min30_interval_converted as (
+, hourly_interval_converted as (
 	select
 		recorded_date
 		, recorded_date::date + recorded_time::time as original_datetime
-		, to_timestamp(floor((extract(epoch from (recorded_date::date + recorded_time::time)) + 1800) / 1800) * 1800) as min30_interval
+		, to_timestamp(floor((extract(epoch from (recorded_date::date + recorded_time::time)) + 3600) / 3600) * 3600) as hourly_interval
 		, sedentary::numeric
 		, load_timestamp
 	from json_parsed
 )
 select
 	recorded_date
-	, min30_interval as recorded_time
+	, hourly_interval as recorded_time
 	, sum(sedentary) as sedentary
 	, load_timestamp
-from min30_interval_converted
-group by recorded_date, min30_interval, load_timestamp
+from hourly_interval_converted
+group by recorded_date, hourly_interval, load_timestamp
 order by recorded_time

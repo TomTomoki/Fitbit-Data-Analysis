@@ -7,7 +7,7 @@ with expanded as (
 	from landing.steps
 	{% if is_incremental() %}
 
-		where load_json -> 'activities-steps' -> 0 ->> 'dateTime' > (select max(recorded_date) from {{ this }})
+		where load_json -> 'activities-steps' -> 0 ->> 'dateTime' > (select COALESCE(max(recorded_date), '2022-09-30') from {{ this }})
 
 	{% endif %}
 )
@@ -20,20 +20,20 @@ with expanded as (
 		, load_timestamp
 	from expanded
 )
-, min30_interval_converted as (
+, hourly_interval_converted as (
 	select
 		recorded_date
 		, recorded_date::date + recorded_time as original_datetime
-		, to_timestamp(floor((extract(epoch from (recorded_date::date + recorded_time)) + 1800) / 1800) * 1800) as min30_interval
+		, to_timestamp(floor((extract(epoch from (recorded_date::date + recorded_time)) + 3600) / 3600) * 3600) as hourly_interval
 		, steps
 		, load_timestamp
 	from json_parsed
 )
 select
 	recorded_date
-	, min30_interval as recorded_time
+	, hourly_interval as recorded_time
 	, sum(steps) as num_steps
 	, load_timestamp
-from min30_interval_converted
-group by recorded_date, min30_interval, load_timestamp
-order by min30_interval
+from hourly_interval_converted
+group by recorded_date, hourly_interval, load_timestamp
+order by hourly_interval
