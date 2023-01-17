@@ -5,6 +5,10 @@ models:
     description: "Staging model for Fitbit Sleep data"
     config:
       materialized: "incremental"
+  - name: stg_sleep_daily_summary
+    description: "Staging model for Fitbit Sleep data - daily summary"
+    config:
+      materialized: "incremental"
   - name: stg_steps
     description: "Staging model for Fitbit Steps data"
     config:
