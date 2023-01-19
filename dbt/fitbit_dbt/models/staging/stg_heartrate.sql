@@ -6,7 +6,7 @@ with expanded as (
 	from landing.heartrate
 	{% if is_incremental() %}
 
-		where load_json -> 'activities-heart' -> 0 ->> 'dateTime' > (select COALESCE(max(recorded_date), '2022-09-30') from {{ this }})
+		where to_timestamp(load_json -> 'activities-heart' -> 0 ->> 'dateTime', 'YYYY-MM-DD') > (select COALESCE(max(date(recorded_time)), '2022-09-30') from {{ this }})
 
 	{% endif %}
 )
@@ -28,12 +28,11 @@ with expanded as (
 	from json_parsed
 )
 select
-	recorded_date
-	, hourly_interval as recorded_time
+	hourly_interval as recorded_time
 	, round(avg(heartrate), 2) as avg_heartrate
 	, max(heartrate) as max_heartrate
 	, min(heartrate) as min_heartrate
 	, load_timestamp
 from hourly_interval_converted
-group by recorded_date, hourly_interval, load_timestamp
+group by hourly_interval, load_timestamp
 order by recorded_time

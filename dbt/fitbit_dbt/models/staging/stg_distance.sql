@@ -7,7 +7,7 @@ with expanded as (
 	from landing.distance
 	{% if is_incremental() %}
 
-		where load_json -> 'activities-distance' -> 0 ->> 'dateTime' > (select COALESCE(max(recorded_date), '2022-09-30') from {{ this }})
+		where to_timestamp(load_json -> 'activities-distance' -> 0 ->> 'dateTime', 'YYYY-MM-DD') > (select COALESCE(max(date(recorded_time)), '2022-09-30') from {{ this }})
 
 	{% endif %}
 )
@@ -22,18 +22,16 @@ with expanded as (
 )
 , hourly_interval_converted as (
 	select
-		recorded_date
-		, recorded_date::date + recorded_time::time as original_datetime
+		recorded_date::date + recorded_time::time as original_datetime
 		, to_timestamp(floor((extract(epoch from (recorded_date::date + recorded_time::time)) + 3600) / 3600) * 3600) as hourly_interval
 		, distance::numeric
 		, load_timestamp
 	from json_parsed
 )
 select
-	recorded_date
-	, hourly_interval as recorded_time
+	hourly_interval as recorded_time
 	, round(sum(distance) * 1000, 2) as distance_meters
 	, load_timestamp
 from hourly_interval_converted
-group by recorded_date, hourly_interval, load_timestamp
+group by hourly_interval, load_timestamp
 order by recorded_time
