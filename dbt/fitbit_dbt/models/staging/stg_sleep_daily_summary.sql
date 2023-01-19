@@ -19,10 +19,25 @@ with sleep_overview as (
 	from landing.sleep
 	{% if is_incremental() %}
 
-		where load_json #> '{sleep,0}' ->> 'dateOfSleep' > (select COALESCE(max(dateOfSleep), '2022-09-30') from {{ this }})
+		where cast(load_json #> '{sleep,0}' ->> 'dateOfSleep' as date) > (select COALESCE(max(dateOfSleep), '2022-09-30') from {{ this }})
 
 	{% endif %}
 )
 select
-    *
+    cast(dateOfSleep as DATE)
+	, duration
+	, efficiency
+	, endTime
+	, isMainSleep
+	, logId
+	, minutesAfterWakeup
+	, minutesAsleep
+	, minutesAwake
+	, minutesToFallAsleep
+	, startTime
+	, timeInBed
+	, totalMinutesAsleep
+	, totalSleepRecords
+	, totalTimeInBed
+	, load_timestamp
 from sleep_overview
