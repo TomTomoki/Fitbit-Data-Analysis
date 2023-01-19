@@ -7,7 +7,7 @@ with expanded as (
 	from landing.sedentary
 	{% if is_incremental() %}
 
-		where cast(load_json -> 'activities-minutesSedentary' -> 0 ->> 'dateTime' as date) > (select COALESCE(max(date(recorded_time)), '2022-09-30') from {{ this }})
+		where load_timestamp > (select COALESCE(max(load_timestamp), '2022-09-30') from {{ this }})
 
 	{% endif %}
 )
