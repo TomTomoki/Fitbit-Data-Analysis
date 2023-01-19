@@ -6,7 +6,7 @@ with expanded as (
 	from landing.heartrate
 	{% if is_incremental() %}
 
-		where to_timestamp(load_json -> 'activities-heart' -> 0 ->> 'dateTime', 'YYYY-MM-DD') > (select COALESCE(max(date(recorded_time)), '2022-09-30') from {{ this }})
+		where cast(load_json -> 'activities-heart' -> 0 ->> 'dateTime' as date) > (select COALESCE(max(date(recorded_time)), '2022-09-30') from {{ this }})
 
 	{% endif %}
 )
