@@ -1,8 +1,7 @@
-private_nonShared/
+*__pycache__*
 airflow/*
 !airflow/dags/
 airflow/dags/helper_modules/env_config.py
-env/
-*__pycache__*
-demo/
 dbt/logs/
+env/
+private_nonShared/

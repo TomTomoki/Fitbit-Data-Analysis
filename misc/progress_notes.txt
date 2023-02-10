@@ -88,3 +88,12 @@
     - 00:00:00 ~ 00:59:00 data are aggregated to 01:00:00
 - Wrote 3 sleep data models
 - Change the if_incremental() logics in all models
+
+
+~01-29-2023
+- Figured out how to fetch Google Forms responses
+
+~02-10-2023
+- Building GoogleForms_ETL DAG
+- Faced/fixed an issue when passing a data frame between tasks because of Airflow's XComs.
+    https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html

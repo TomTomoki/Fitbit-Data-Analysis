@@ -18,6 +18,10 @@ class DBConnector():
         self.cur.close()
         self.conn.close()
 
-    def execute_query(self, query):
-        self.cur.execute(query)
-        self.conn.commit()
+    def execute_query(self, query, parameters=None):
+        if not parameters:
+            self.cur.execute(query)
+            self.conn.commit()
+        else:
+            self.cur.execute(query, parameters)
+            self.conn.commit()
