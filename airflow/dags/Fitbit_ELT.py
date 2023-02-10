@@ -22,7 +22,7 @@ def fitbit_taskflow():
         db_conn = DBConnector(env_config.db_user, env_config.db_password, env_config.db_name, env_config.db_host)
         db_conn.connect()
 
-        types = ['sleep', 'steps', 'calories', 'distance', 'minutesSedentary', 'heartrate']
+        types = ['sleep', 'steps', 'calories', 'distance', 'sedentary', 'heartrate']
         #record_date = pdl.now('America/Los_Angeles').to_date_string()
         record_date = pdl.from_format('2022-10-12', 'YYYY-MM-DD').to_date_string()
 
@@ -32,7 +32,7 @@ def fitbit_taskflow():
             if res == "access_token_expired":
                 db_conn.close_connection()
                 raise AirflowFailException("ERROR: Access token expired!")
-            elif res == "invalid_record_type"
+            elif res == "invalid_record_type":
                 db_conn.close_connection()
                 raise AirflowFailException("ERROR: Invalid record type!")
             else:

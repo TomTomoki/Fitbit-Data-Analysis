@@ -21,7 +21,7 @@ class Fitbit:
             return self.get_calories(date)
         elif type == 'distance':
             return self.get_distance(date)
-        elif type == 'minutesSedentary':
+        elif type == 'sedentary':
             return self.get_minutesSedentary(date)
         elif type == 'heartrate':
             return self.get_heartrate(date)
