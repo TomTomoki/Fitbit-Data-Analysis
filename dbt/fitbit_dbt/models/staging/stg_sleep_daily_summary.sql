@@ -12,9 +12,9 @@ with sleep_overview as (
 		, load_json #> '{sleep,0}' ->> 'minutesToFallAsleep' as minutesToFallAsleep
 		, load_json #> '{sleep,0}' ->> 'startTime' as startTime
 		, load_json #> '{sleep,0}' ->> 'timeInBed' as timeInBed
-		, load_json -> 'summary' -> 'totalMinutesAsleep' as totalMinutesAsleep
-		, load_json -> 'summary' -> 'totalSleepRecords' as totalSleepRecords
-		, load_json -> 'summary' -> 'totalTimeInBed' as totalTimeInBed
+		, load_json -> 'summary' ->> 'totalMinutesAsleep' as totalMinutesAsleep
+		, load_json -> 'summary' ->> 'totalSleepRecords' as totalSleepRecords
+		, load_json -> 'summary' ->> 'totalTimeInBed' as totalTimeInBed
 		, load_timestamp
 	from landing.sleep
 	{% if is_incremental() %}
