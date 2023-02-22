@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: sleep
+    description: "Prod model for Fitbit Sleep data - unit in minutes"
+    config:
+      materialized: "incremental"
+  - name: sleep_daily_summary
+    description: "Prod model for Fitbit Sleep data - daily summary"
+    config:
+      materialized: "incremental"
+  - name: steps
+    description: "Prod model for Fitbit Steps data"
+    config:
+      materialized: "incremental"
+  - name: calories
+    description: "Prod model for Fitbit Calories data"
+    config:
+      materialized: "incremental"
+  - name: distance
+    description: "Prod model for Fitbit Distance data"
+    config:
+      materialized: "incremental"
+  - name: sedentary
+    description: "Prod model for Fitbit Sedentary data"
+    config:
+      materialized: "incremental"
+  - name: heartrate
+    description: "Prod model for Fitbit Heartrate data"
+    config:
+      materialized: "incremental"
