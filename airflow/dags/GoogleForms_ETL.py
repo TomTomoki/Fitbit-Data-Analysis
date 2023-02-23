@@ -7,8 +7,8 @@ from airflow.decorators import dag, task
 
 @dag(
     dag_id='GoogleForms',
-    schedule=None,
-    start_date=pdl.datetime(2022, 12, 1, tz="America/Los_Angeles")
+    schedule='15 * * * *',
+    start_date=pdl.datetime(2023, 2, 23, tz="America/Los_Angeles")
 )
 def GoogleForms_taskflow():
     @task

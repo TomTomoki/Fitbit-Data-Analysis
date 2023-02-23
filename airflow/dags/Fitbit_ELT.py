@@ -9,8 +9,8 @@ import os
 
 @dag(
     dag_id='Fitbit',
-    schedule=None,
-    start_date=pdl.datetime(2022, 12, 1, tz="America/Los_Angeles")
+    schedule='33 21 * * *',
+    start_date=pdl.datetime(2023, 2, 22, tz="UTC")
 )
 def fitbit_taskflow():
     @task
@@ -44,17 +44,12 @@ def fitbit_taskflow():
     HOME = os.environ["HOME"]
     dbt_path = os.path.join(HOME, "Fitbit-Data-Analysis/dbt/fitbit_dbt")
 
-    transform_stg = BashOperator(
-        task_id = 'transform_stg',
-        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run --select staging"
+    transform = BashOperator(
+        task_id = 'transform',
+        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run"
     )
 
-    transform_prod = BashOperator(
-        task_id = 'transform_prod',
-        bash_command=f"cd {dbt_path}"
-    )
-
-    extract_load() >> transform_stg >> transform_prod
+    extract_load() >> transform
 
 
 fitbit_taskflow()
