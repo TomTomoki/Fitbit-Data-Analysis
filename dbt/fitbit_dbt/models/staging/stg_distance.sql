@@ -5,11 +5,6 @@ with expanded as (
 		, json_array_elements(load_json -> 'activities-distance-intraday' #> '{dataset}') as distance_detail
 		, load_timestamp
 	from landing.distance
-	{% if is_incremental() %}
-
-		where load_timestamp > (select COALESCE(max(load_timestamp), '2022-09-30') from {{ this }})
-
-	{% endif %}
 )
 , json_parsed as (
 	select

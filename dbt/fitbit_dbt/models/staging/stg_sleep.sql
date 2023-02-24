@@ -6,11 +6,6 @@ with sleep_data as (
 		, cast(json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{data}') ->> 'seconds' as integer) as seconds
 		, load_timestamp
 	from landing.sleep
-	{% if is_incremental() %}
-
-		where load_timestamp > (select COALESCE(max(load_timestamp), '2022-09-30') from {{ this }})
-
-	{% endif %}
 ),
 sleep_shortData as (
 	select
@@ -20,11 +15,6 @@ sleep_shortData as (
 		, cast(json_array_elements(load_json #> '{sleep,0}' -> 'levels' #> '{shortData}') ->> 'seconds' as integer) as seconds
 		, load_timestamp
 	from landing.sleep
-	{% if is_incremental() %}
-
-		where load_timestamp > (select COALESCE(max(load_timestamp), '2022-09-30') from {{ this }})
-
-	{% endif %}
 ),
 add_endTime_data as(
 	select
@@ -35,11 +25,6 @@ add_endTime_data as(
 		, seconds
 		, load_timestamp
 	from sleep_data
-	{% if is_incremental() %}
-
-		where cast(dateTime as timestamp) > (select COALESCE(max(end_time), '2022-09-30') from {{ this }})
-
-	{% endif %}
 ),
 add_endTime_shortData as(
 	select
@@ -50,11 +35,6 @@ add_endTime_shortData as(
 		, seconds
 		, load_timestamp
 	from sleep_shortData
-	{% if is_incremental() %}
-
-		where cast(dateTime as timestamp) > (select COALESCE(max(end_time), '2022-09-30') from {{ this }})
-
-	{% endif %}
 ),
 overlapped_data as (
 	select

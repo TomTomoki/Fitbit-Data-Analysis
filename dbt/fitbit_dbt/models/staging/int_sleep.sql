@@ -24,11 +24,6 @@ with add_hourly_start_end as (
 		, logId
 		, load_timestamp
 	from {{ ref('stg_sleep') }}
-    {% if is_incremental() %}
-
-		where start_time > (select COALESCE(max(recorded_time), '2022-09-30') from {{ this }})
-
-	{% endif %}
 ),
 start_end_in_same_hour as (
 	select 

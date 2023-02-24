@@ -17,11 +17,6 @@ with sleep_overview as (
 		, load_json -> 'summary' ->> 'totalTimeInBed' as totalTimeInBed
 		, load_timestamp
 	from landing.sleep
-	{% if is_incremental() %}
-
-		where cast(load_json #> '{sleep,0}' ->> 'dateOfSleep' as date) > (select COALESCE(max(dateOfSleep), '2022-09-30') from {{ this }})
-
-	{% endif %}
 )
 select
     cast(dateOfSleep as DATE)
