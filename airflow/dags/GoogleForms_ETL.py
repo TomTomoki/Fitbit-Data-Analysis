@@ -32,7 +32,7 @@ def GoogleForms_taskflow():
 
         db_conn = DBConnector(env_config.db_user, env_config.db_password, env_config.db_name, env_config.db_host)
         db_conn.connect()
-        db_conn.execute_query("select COALESCE(max(load_timestamp), '2023-01-01') from PROD.Google_Forms_Responses")
+        db_conn.execute_query("select COALESCE(max(recorded_date), '2023-01-01') from PROD.Google_Forms_Responses")
         max_timestamp = db_conn.cur.fetchone()
         db_conn.close_connection()
 
