@@ -17,7 +17,7 @@ with data_type_converted as (
     from {{ ref('stg_sleep_daily_summary') }}
 	{% if is_incremental() %}
 
-		where recorded_date > (select COALESCE(max(recorded_date), '2023-02-21') from {{ this }})
+		where dateofsleep > (select COALESCE(max(recorded_date), '2023-02-21') from {{ this }})
 
 	{% endif %}
 )

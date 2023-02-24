@@ -11,8 +11,10 @@ create table LANDING.distance (load_timestamp timestamp with time zone, load_jso
 create table LANDING.sedentary (load_timestamp timestamp with time zone, load_json json);
 create table LANDING.heartrate (load_timestamp timestamp with time zone, load_json json);
 
+
 create table PROD.Google_Forms_Responses (
 	load_timestamp timestamp with time zone
+	, recorded_date date
 	, motivated_level smallint
 	, happiness_level smallint
 	, tiredness_level smallint

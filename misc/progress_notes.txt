@@ -97,3 +97,12 @@
 - Building GoogleForms_ETL DAG
 - Faced/fixed an issue when passing a data frame between tasks because of Airflow's XComs.
     https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html
+
+
+~02-23-2023
+- Built all of the final Fitbit models
+- Learned about the Airflow catchup feature in a hard way...
+    - My start_date was 2022/12/01, and my t3.small ec2 instance stopped responding I think because it ran out of resource as it tried to catcth up all the way from the 2022-12-01
+- Completed Fitbit/Questionaaire ETL/ELT settings
+    - Deleted the test data
+    - They are scheduled to run at 1pm PT everyday

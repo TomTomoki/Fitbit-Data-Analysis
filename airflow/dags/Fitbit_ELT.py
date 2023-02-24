@@ -9,8 +9,8 @@ import os
 
 @dag(
     dag_id='Fitbit',
-    schedule='33 21 * * *',
-    start_date=pdl.datetime(2023, 2, 22, tz="UTC")
+    schedule='0 21 * * *',
+    start_date=pdl.datetime(2023, 2, 23, tz="UTC")
 )
 def fitbit_taskflow():
     @task
@@ -23,8 +23,8 @@ def fitbit_taskflow():
         db_conn.connect()
 
         types = ['sleep', 'steps', 'calories', 'distance', 'sedentary', 'heartrate']
-        #record_date = pdl.now('America/Los_Angeles').to_date_string()
-        record_date = pdl.from_format('2022-10-12', 'YYYY-MM-DD').to_date_string()
+        record_date = pdl.now('America/Los_Angeles').subtract(days=1).to_date_string()
+        #record_date = pdl.from_format('2022-10-15', 'YYYY-MM-DD').to_date_string()
 
         for type in types:
             res = fb.get_records(type, record_date)
@@ -46,7 +46,8 @@ def fitbit_taskflow():
 
     transform = BashOperator(
         task_id = 'transform',
-        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run"
+        bash_command=f"source {HOME}/Fitbit-Data-Analysis/env/bin/activate && cd {dbt_path}" + " && dbt run",
+        trigger_rule='all_success'
     )
 
     extract_load() >> transform
