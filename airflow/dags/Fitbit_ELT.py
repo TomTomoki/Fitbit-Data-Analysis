@@ -9,8 +9,8 @@ import os
 
 @dag(
     dag_id='Fitbit',
-    schedule='0 21 * * *',
-    start_date=pdl.datetime(2023, 2, 23, tz="UTC")
+    schedule='30 20 * * *',
+    start_date=pdl.datetime(2023, 2, 27, tz="UTC")
 )
 def fitbit_taskflow():
     @task

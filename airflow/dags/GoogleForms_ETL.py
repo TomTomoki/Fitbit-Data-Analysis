@@ -9,8 +9,8 @@ from airflow.exceptions import AirflowSkipException
 
 @dag(
     dag_id='GoogleForms',
-    schedule='0 21 * * *',
-    start_date=pdl.datetime(2023, 2, 23, tz="UTC")
+    schedule='40 20 * * *',
+    start_date=pdl.datetime(2023, 2, 27, tz="UTC")
 )
 def GoogleForms_taskflow():
     @task
