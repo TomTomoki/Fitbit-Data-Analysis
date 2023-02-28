@@ -106,3 +106,7 @@
 - Completed Fitbit/Questionaaire ETL/ELT settings
     - Deleted the test data
     - They are scheduled to run at 1pm PT everyday
+
+
+~02-27-2023
+- Migrated the database to Azure SQL Database for PostgreSQL due to its cheaper pricing with my student account

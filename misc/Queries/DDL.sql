@@ -3,6 +3,7 @@ create schema landing;
 create schema staging;
 create schema prod;
 
+create database airflow_db;
 
 create table LANDING.sleep (load_timestamp timestamp with time zone, load_json json);
 create table LANDING.steps (load_timestamp timestamp with time zone, load_json json);
