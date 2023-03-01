@@ -10,7 +10,7 @@ from airflow.exceptions import AirflowSkipException
 @dag(
     dag_id='GoogleForms',
     schedule='40 20 * * *',
-    start_date=pdl.datetime(2023, 2, 27, tz="UTC")
+    start_date=pdl.datetime(2023, 3, 1, tz="UTC")
 )
 def GoogleForms_taskflow():
     @task
@@ -32,7 +32,7 @@ def GoogleForms_taskflow():
 
         db_conn = DBConnector(env_config.db_user, env_config.db_password, env_config.db_name, env_config.db_host)
         db_conn.connect()
-        db_conn.execute_query("select COALESCE(max(recorded_date), '2023-01-01') from PROD.Google_Forms_Responses")
+        db_conn.execute_query("select COALESCE(max(load_timestamp), '2023-01-01') from PROD.Google_Forms_Responses")
         max_timestamp = db_conn.cur.fetchone()
         db_conn.close_connection()
 
@@ -42,6 +42,7 @@ def GoogleForms_taskflow():
             print("LOGGING: No response to perform ETL on")
             raise AirflowSkipException
 
+        df_filtered.reset_index(drop=True, inplace=True)
         ti.xcom_push("df_filtered", df_filtered.to_json())
 
     @task(
