@@ -10,11 +10,13 @@ import os
 @dag(
     dag_id='Fitbit',
     schedule='30 20 * * *',
-    start_date=pdl.datetime(2023, 2, 27, tz="UTC")
+    start_date=pdl.datetime(2023, 3, 1, tz="UTC")
 )
 def fitbit_taskflow():
-    @task
-    def extract_load():
+    @task(
+        provide_context=True
+    )
+    def extract_load(**kwargs):
         fb = Fitbit(env_config.fitbit_client_id, 
                     env_config.fitbit_access_token,
                     env_config.fitbit_access_token_expires_on)
@@ -22,9 +24,12 @@ def fitbit_taskflow():
         db_conn = DBConnector(env_config.db_user, env_config.db_password, env_config.db_name, env_config.db_host)
         db_conn.connect()
 
+        if "manual_date_to_load" in kwargs["params"].keys():
+            record_date = pdl.from_format(kwargs["params"]["manual_date_to_load"], 'YYYY-MM-DD').to_date_string()
+        else:
+            record_date = pdl.now('America/Los_Angeles').subtract(days=1).to_date_string()
+
         types = ['sleep', 'steps', 'calories', 'distance', 'sedentary', 'heartrate']
-        record_date = pdl.now('America/Los_Angeles').subtract(days=1).to_date_string()
-        #record_date = pdl.from_format('2022-10-15', 'YYYY-MM-DD').to_date_string()
 
         for type in types:
             res = fb.get_records(type, record_date)

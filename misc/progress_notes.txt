@@ -110,3 +110,7 @@
 
 ~02-27-2023
 - Migrated the database to Azure SQL Database for PostgreSQL due to its cheaper pricing with my student account
+
+~03-01-2023
+- Fixed the index issue after filtering Google Forms responses data frame using reset_index()
+- Modified to allow a custom input to specify the date to load data for when triggered manually
